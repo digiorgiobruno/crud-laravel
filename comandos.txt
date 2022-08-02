@@ -1,0 +1,34 @@
+Crear proyecto:
+
+composer create-project laravel/laravel example-app
+
+Crear base de datos mysql
+
+mysql -u root -p
+CREATE DATABASE Nombre_base;
+
+Crear usuario y dar privilegios
+
+mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'PASSWORD';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+
+Crear modelos:
+php artisan make:model Empleado -mcr
+
+-mrc significa modelo control recursos.
+
+Para poder ver como crear columns y que tipo de columns crear
+https://laravel.com/docs/9.x/migrations#columns
+
+Para saber cuales son las rutas activas de nuestro proyecto
+php artisan route:list
+
+php artisan storage:link 
+
+Integrar componentes ui de laravel
+composer require laravel/ui
+Integrar bootstrap y la autentificacion
+php artisan ui bootstrap --auth
+npm install
+npm run dev
