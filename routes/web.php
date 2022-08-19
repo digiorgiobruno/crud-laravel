@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ControlHorarioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpleadoController;
 /*
@@ -27,7 +28,7 @@ Route::get('/empleado', function () {
 /* Route::get('empleado/create', [EmpleadoController::class,'create']); */
 
 Route::resource('empleado', EmpleadoController::class)->middleware('auth');
-Auth::routes(['register'=>false,'reset'=>false]);
+Auth::routes();//['register'=>true,'reset'=>true]
 
 /* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -44,3 +45,6 @@ Route::group(['middleware'=>'auth'],function (){
     Route::get('/', [EmpleadoController::class, 'index'])->name('home');
 
 });
+
+Route::get('/usuarios', [ControlHorarioController::class, 'getUserInfo']);
+Route::post('/usuarios', [ControlHorarioController::class, 'getUserInfoFilter']);
