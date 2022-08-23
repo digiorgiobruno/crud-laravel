@@ -1,0 +1,4 @@
+[2022-08-22 11:21:56.296] [exthost] [info] Extension host with pid 19510 started
+[2022-08-22 11:21:56.296] [exthost] [info] Skipping acquiring lock for /home/laruta/Documentos/Bruno/Proyectos/p1/sistema/~/.vscode-root/User/workspaceStorage/e031c23a69ab90372a8eb24d19af74c1.
+[2022-08-22 11:22:25.930] [exthost] [info] Extension host terminating: renderer closed the socket
+[2022-08-22 11:22:25.935] [exthost] [info] Extension host with pid 19510 exiting with code 0
