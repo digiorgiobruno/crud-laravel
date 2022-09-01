@@ -49,7 +49,9 @@ class RegisterController extends Controller
                     $datos->CUIL=str_replace("-","",$datos->SSN);
                     $datos->SURNAME=trim(explode(",", $datos->NAME)[0]);
                     $datos->NAME=trim(explode(",", $datos->NAME)[1]);
-                    $datos->PASSWORD=Hash::make($datos->CUIL);//hacemos un hash con el cuil
+                    $pass=$this->generatePassword(9);//contraseña corta aleatoria
+                    $datos->PASSWORD = $pass;//hacemos un hash con el cuil
+                    session(['pwdNE' => $pass]);
                     $dat['datos'] = $datos;
                     return view('auth.register',$dat);
                  //   return redirect('/register')->with("datos",$dat);
@@ -69,9 +71,6 @@ class RegisterController extends Controller
             return redirect('/register')->with("error",$mensaje);//$this->redirectPath());
            
         }
-
-
-
     
     /**
      * Where to redirect users after registration.
@@ -140,6 +139,15 @@ class RegisterController extends Controller
         return $cuil;
     }
 
-
+    function generatePassword($length)
+    {
+        $key = "";
+        $pattern = "1234567890abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($pattern)-1;
+        for($i = 0; $i < $length; $i++){
+            $key .= substr($pattern, mt_rand(0,$max), 1);
+        }
+        return $key;
+    }
     
 }
