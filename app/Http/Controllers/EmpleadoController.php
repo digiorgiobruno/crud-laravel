@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empleado;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;//clase que tiene elementos necesarios para manejo de archivos
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class EmpleadoController extends Controller
 {
@@ -16,7 +19,13 @@ class EmpleadoController extends Controller
     public function index()
     {
         //
-        $datos['empleados']=Empleado::paginate(2);
+        //dump(Auth::user()->roles[0]->role);
+        //Gate::authorize('create-user');
+        if (Gate::denies('create-user')) {
+            return redirect('/usuarios');
+        }
+
+        $datos['empleados']=User::paginate(4);
         //return $datos;
         return view('empleado.index',$datos);
     }
@@ -48,9 +57,9 @@ class EmpleadoController extends Controller
     {
         //Validaciones
         $campos=[
-            'Nombre'=>'required|string|max:100',
-            'Apellido'=>'required|string|max:100',
-            'Correo'=>'required|email',
+            'name'=>'required|string|max:100',
+            'surname'=>'required|string|max:100',
+            'email'=>'required|email',
             'Foto'=>'required|max:10000|mimes:jpeg,png,jpg'
         ];
         $mensajes=[
@@ -87,10 +96,10 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function edit(Empleado $empleado)
+    public function edit(User $empleado)
     {
         //
-        $empleado=Empleado::findOrFail($empleado->id);
+        $empleado=User::findOrFail($empleado->id);
         return view('empleado.edit',compact('empleado'));
     }
 
@@ -101,16 +110,15 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empleado $empleado)
+    public function update(Request $request, User $empleado)
     {
-        //
-
 
          //Validaciones
          $campos=[
-            'Nombre'=>'required|string|max:100',
-            'Apellido'=>'required|string|max:100',
-            'Correo'=>'required|email',
+            'name' => ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:25'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'cuil' => [ 'required', 'string', 'size:11', 'unique:users'],
             
         ];
         $mensajes=[
@@ -126,14 +134,14 @@ class EmpleadoController extends Controller
         $datosEmpleado= request()->except(['_token','_method']);
 
         if($request->hasFile('Foto')){
-            $empleado=Empleado::findOrFail($empleado->id);
+            $empleado=User::findOrFail($empleado->id);
             Storage::delete('public/'.$empleado->Foto);
             $datosEmpleado['Foto']=$request->file('Foto')->store('uploads','public');
         }
 
-        Empleado::where('id','=',$empleado->id)->update($datosEmpleado);
+        User::where('id','=',$empleado->id)->update($datosEmpleado);
 
-        $empleado=Empleado::findOrFail($empleado->id);
+        $empleado=User::findOrFail($empleado->id);
         //return view('empleado.edit',compact('empleado'));
 
         return redirect('empleado')->with("mensaje",'Empleado modificado');
@@ -145,13 +153,16 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empleado $empleado)
+    public function destroy(User $empleado)
     {
-        $empleado=Empleado::findOrFail($empleado->id);
-        if(Storage::delete('public/'.$empleado->Foto)){
-            Empleado::destroy($empleado->id);
+        $empleado=User::findOrFail($empleado->id);
+        /* if(Storage::delete('public/'.$empleado->Foto)){
+            User::destroy($empleado->id);
+        } */
+        if($empleado->id== Auth::user()->id){
+            return redirect('empleado')->with("mensaje",'No puedes borrar tu propio usuario.');
         }
-
+        User::destroy($empleado->id);
         return redirect('empleado')->with("mensaje",'Empleado borrado');
         //
     }

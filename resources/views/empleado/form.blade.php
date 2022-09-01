@@ -18,18 +18,22 @@
 
 <div class="form-group">
 <label for="Nombre">Nombre</label>
-<input type="text" name='Nombre' value="{{isset($empleado->Nombre)?$empleado->Nombre:''  }}" id="Nombre" class="form-control">
+<input type="text" name='name' value="{{isset($empleado->name)?$empleado->name:''  }}" id="name" class="form-control">
 </div>
 <div class="form-group">
-<label for="Nombre">Apellido</label>
-<input type="text" name='Apellido' value="{{ isset($empleado->Apellido)?$empleado->Apellido:''}}" id="Apellido" class="form-control">
+    <label for="Apellido">Apellido</label>
+    <input type="text" name='surname' value="{{isset($empleado->surname)?$empleado->surname:''  }}" id="surname" class="form-control">
+    </div>
+<div class="form-group">
+<label for="Nombre">Cuil</label>
+<input type="text" name='cuil' value="{{ isset($empleado->cuil)?$empleado->cuil:''}}" id="cuil" class="form-control">
 <div>
 <div class="form-group">   
 <label for="Nombre">Correo</label>
-<input type="text" name='Correo' value="{{ isset($empleado->Correo)?$empleado->Correo:'' }}" id="Correo" class="form-control">
+<input type="text" name='email' value="{{ isset($empleado->email)?$empleado->email:'' }}" id="email" class="form-control">
 <div>
 <div class="form-group">    
-<label for="Nombre"></label>
+
 {{-- {{ $empleado->Foto }} --}}
 @if (isset($empleado->Foto))
 <img src="{{ asset("storage").'/'.$empleado->Foto }}" width="100" alt="Imagen usuario" class="img-thumbnail img-fluid">

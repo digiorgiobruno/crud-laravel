@@ -15,6 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -34,10 +35,20 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                           <li class="nav-item">
-                            <a class="nav-link" href="{{ route('empleado.index') }}">{{ __('Empleado') }}</a>
-
+                    @guest
+                          
+                    @else
+                        @can('create-user')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('empleado.index') }}">{{ __('Empleado') }}</a>
                             </li> 
+                        @endcan
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('usuarios.getuserinfo') }}">{{ __('Mis Marcas') }}</a>
+                            </li>
+                    
+                    @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -65,7 +76,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Salir') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

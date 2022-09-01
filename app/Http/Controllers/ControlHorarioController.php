@@ -10,13 +10,34 @@ use Carbon\Carbon;
 
 class ControlHorarioController extends Controller
 {
+
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function getUserInfo(Request $request){
-        
-        
+       
+        if(isset($request->cuil)){
+            $cuil=$request->cuil;
+        }else{
+            $cuil=$request->user()->cuil;
+        }
+        $ultimo=substr($cuil, -1);
+        $primeros=substr($cuil,0, 2);
+        $medio=substr($cuil, -9, 8);
+        $cuil=$primeros."-".$medio."-".$ultimo;
+        //dump($cuil);   
+
         $fichadas = DB::connection('sqlsrv')->table('CheckInOut')
         ->join('USERINFO', 'CheckInOut.USERID', '=', 'USERINFO.USERID')
         ->select('CheckInOut.USERID', 'CheckInOut.CHECKTIME', 'CheckInOut.CHECKTYPE', 'USERINFO.NAME', 'USERINFO.TITLE','USERINFO.SSN')
-        ->where('USERINFO.SSN', '20-11629269-7')->orderBy('CheckInOut.CHECKTIME', 'DESC');
+        ->where('USERINFO.SSN', $cuil)->orderBy('CheckInOut.CHECKTIME', 'DESC');
 
 
         if($request->get('Filtrar')!=null && $request->get('to_date')!=null && $request->get('from_date')!=null || $request->get('Filtrar')=='limpiar'){
@@ -30,12 +51,11 @@ class ControlHorarioController extends Controller
             $from_date=date("d/m/Y",strtotime($from_date));
             $to_date=date("d/m/Y",strtotime($to_date.'23:59:59.999'));
             //Filtro between
-            $fichadas=$fichadas->whereBetween('CheckInOut.CHECKTIME', [$from_date, $to_date]);
-          
+            $fichadas=$fichadas->whereBetween('CheckInOut.CHECKTIME', [$from_date, $to_date]); 
         } 
 
         $datos['fichadas']=$fichadas->get();
-     
+        $datos['cuil']=str_replace("-","",$cuil);
         if($fichadas->get()->count()>0){
             return view('usuarioFichada.index',$datos);
         }else{

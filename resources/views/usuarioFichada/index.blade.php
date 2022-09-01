@@ -18,7 +18,7 @@
         <li class="list-group-item"><span>Cuil: </span>{{ $fichadas[0]->SSN }}</li>
         <li class="list-group-item"><span>Área: </span>{{ $fichadas[0]->TITLE }}</li>
         <li class="list-group-item"><span>Total fichadas registradas:</span> {{ count($fichadas)  }}</li>
-      </ul>
+    </ul>
 @endif
       
 
@@ -43,7 +43,9 @@
         </div>
         
         <div class="col-md-4 mt-2">
-
+            @if (isset($cuil))
+                <input type="hidden" name="cuil" value="{{$cuil}}">
+            @endif
             
             <input type='submit' name="Filtrar" value='Filtrar' class='btn btn-primary'/>
             <input type='submit' name="Limpiar" value='Limpiar' class='btn btn-default'/>

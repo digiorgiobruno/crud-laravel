@@ -83,6 +83,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST_sqlsrv', 'localhost'),
             'port' => env('DB_PORT_sqlsrv', '1433'),
+            'trust_server_certificate' => true,
             'database' => env('DB_DATABASE_sqlsrv', 'forge'),
             'username' => env('DB_USERNAME_sqlsrv', 'forge'),
             'password' => env('DB_PASSWORD_sqlsrv', ''),

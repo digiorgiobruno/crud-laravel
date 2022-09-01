@@ -19,32 +19,15 @@ Route::get('/', function () {
     return view('auth.login');
 
 });
-/*
-Route::get('/empleado', function () {
-    return view('empleado.index');
-}); */
-//Forma de argumentos (Ruta, [Nombre de la clase, 'metodo de la clase'])
 
-/* Route::get('empleado/create', [EmpleadoController::class,'create']); */
+Auth::routes(['register'=>true,'reset'=>true,'verify'=>true]);
+Route::group(['middleware'=>['auth','verified']],function (){
 
-Route::resource('empleado', EmpleadoController::class)->middleware('auth');
-Auth::routes();//['register'=>true,'reset'=>true]
-
-/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes(); */
-
-Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
-
-/* Auth::routes(); */
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::group(['middleware'=>'auth'],function (){
-
+    Route::resource('empleado', EmpleadoController::class)->middleware('auth');
     Route::get('/', [EmpleadoController::class, 'index'])->name('home');
+    Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+    Route::get('/usuarios', [ControlHorarioController::class, 'getUserInfo'])->name('usuarios.getuserinfo');
+    Route::post('/usuarios', [ControlHorarioController::class, 'getUserInfoFilter']);
 
 });
 
-Route::get('/usuarios', [ControlHorarioController::class, 'getUserInfo']);
-Route::post('/usuarios', [ControlHorarioController::class, 'getUserInfoFilter']);

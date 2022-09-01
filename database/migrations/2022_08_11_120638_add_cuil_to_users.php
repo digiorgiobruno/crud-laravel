@@ -15,7 +15,7 @@ class AddCuilToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('cuil',11);
+            $table->string('cuil',11)->unique();
 
         });
     }
