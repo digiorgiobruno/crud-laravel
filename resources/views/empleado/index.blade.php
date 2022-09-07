@@ -14,7 +14,7 @@
         {{ Session::get('error') }}
 
     </div>
-@endif
+    @endif
     
 @if (Route::has('register'))
                                 
@@ -46,12 +46,12 @@
             <td>{{ $empleado->cuil }}</td>
             <td>{{ $empleado->email }}</td>
             <td> 
-                <div class="btn-group" role="group" aria-label="Basic example">    
-                    <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}" class="btn btn-warning mr-1">Editar</a> 
+                <div class="btn-group btn-group-justified" role="group" aria-label="Basic example">    
+                    <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}" class="btn btn-warning">Editar</a> 
                     <form action="{{ url(route('usuarios.getuserinfo')) }}" method="get" class="d-inline">
                         @csrf
                         <input type="hidden" name="cuil" value="{{ $empleado->cuil}}">
-                        <input type="submit" value="ver" class="btn btn-primary mr-1">   
+                        <input type="submit" value="ver" class="btn btn-primary">   
                     </form>
                     <form action="{{ url('empleado/'.$empleado->id) }}" method="post" class="d-inline">
                         @csrf

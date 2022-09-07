@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
 use App\Models\Empleado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;//clase que tiene elementos necesarios para manejo de archivos
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use App\Classes\Slim;
 
 class EmpleadoController extends Controller
 {
@@ -21,6 +22,7 @@ class EmpleadoController extends Controller
         //
         //dump(Auth::user()->roles[0]->role);
         //Gate::authorize('create-user');
+        //autorizacion
         if (Gate::denies('create-user')) {
             return redirect('/usuarios');
         }
@@ -37,13 +39,7 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-        //
-        //$empleado=new Empleado();
-        //$empleado->Nombre='';
-     /*    $empleado->Apellido='';
-        $empleado->Foto='';
-        $empleado->Correo='';
-        $empleado->Id=''; */
+       
         return view('empleado.create');
     }
 
@@ -60,19 +56,18 @@ class EmpleadoController extends Controller
             'name'=>'required|string|max:100',
             'surname'=>'required|string|max:100',
             'email'=>'required|email',
-            'Foto'=>'required|max:10000|mimes:jpeg,png,jpg'
+            'img'=>'required|max:10000|mimes:jpeg,png,jpg'
         ];
         $mensajes=[
         'required'=>'El :attribute es requerido',
-        'Foto.required'=>'La foto es requerida'
-        
+        'img.required'=>'La foto es requerida'
         ];
         $this->validate($request,$campos,$mensajes);
         //---------------
         $datosEmpleado= request()->except('_token');
-        if($request->hasFile('Foto')){
-            //si hay un archivo llamado foto lo copiamos en storage 
-            $datosEmpleado['Foto']=$request->file('Foto')->store('uploads','public');
+        if($request->hasFile('img')){
+            //si hay un archivo llamado img lo copiamos en storage 
+            $datosEmpleado['img']=$request->file('img')->store('uploads','public');
         }
         Empleado::insert($datosEmpleado);
         //return response()->json($datosEmpleado);
@@ -85,7 +80,7 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function show(Empleado $empleado)
+    public function show(User $empleado)
     {
         //
     }
@@ -99,6 +94,9 @@ class EmpleadoController extends Controller
     public function edit(User $empleado)
     {
         //
+        if (Gate::denies('create-user')&&$empleado->id != Auth::user()->id) {
+            return redirect('/usuarios');
+        } 
         $empleado=User::findOrFail($empleado->id);
         return view('empleado.edit',compact('empleado'));
     }
@@ -111,40 +109,61 @@ class EmpleadoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $empleado)
-    {
-
+    {   
+      
          //Validaciones
          $campos=[
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:25'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'cuil' => [ 'required', 'string', 'size:11', 'unique:users'],
-            
         ];
         $mensajes=[
-        'required'=>'El :attribute es requerido',        
+        'required'=>'El :attribute es requerido',
+
         ];
-
-        if($request->hasFile('Foto')){
-            $campos=['Foto'=>'required|max:10000|mimes:jpeg,png,jpg'];
-            $mensajes=['Foto.required'=>'La foto es requerida'];
+        //$opcion='';
+        if($empleado->id== Auth::user()->id && isset($request->password)){ 
+            $campos=[
+                 'password' => ['string', 'min:8', 'confirmed'], 
+            ];
+            $datosEmpleado= request()->except(['_token','_method','slim','password_confirmation']);
+            $datosEmpleado['password']=Hash::make($request->password);
+            //$opcion=$request->get('opcion');
+        }else{
+            $datosEmpleado= request()->except(['_token','_method','slim','password_confirmation','password']);
         }
+      
         $this->validate($request,$campos,$mensajes);
+       // dd($request);
+        
+        if (isset(Slim::getImages()[0]))
+        {
+            $image = Slim::getImages()[0];
 
-        $datosEmpleado= request()->except(['_token','_method']);
+            
+          
+                if (isset($image['output']['data'])){
+                    $name = md5(uniqid() . time()) . '.' . 'png';
+                    $data = $image['output']['data'];
+                    $path = base_path() . '/storage/app/public';
+                    $file = Slim::saveFile($data, $name, $path);
+                    $datosEmpleado['img']=$file['name']; 
+                }
+            
 
-        if($request->hasFile('Foto')){
-            $empleado=User::findOrFail($empleado->id);
-            Storage::delete('public/'.$empleado->Foto);
-            $datosEmpleado['Foto']=$request->file('Foto')->store('uploads','public');
+        }else{
+
+            if (!$request->img){
+                Storage::delete('public/'.$empleado->img);
+                $datosEmpleado['img'] = null;
+            }  
         }
-
         User::where('id','=',$empleado->id)->update($datosEmpleado);
 
         $empleado=User::findOrFail($empleado->id);
-        //return view('empleado.edit',compact('empleado'));
-
-        return redirect('empleado')->with("mensaje",'Empleado modificado');
+        
+        $datos['empleado']=$empleado;
+        $datos['mensaje']='Modificado.';
+        return redirect()->route('empleado.edit',  $empleado)->with("mensaje",'Empleado modificado');
     }
 
     /**
@@ -156,9 +175,9 @@ class EmpleadoController extends Controller
     public function destroy(User $empleado)
     {
         $empleado=User::findOrFail($empleado->id);
-        /* if(Storage::delete('public/'.$empleado->Foto)){
+         if(Storage::delete('public/'.$empleado->img)){
             User::destroy($empleado->id);
-        } */
+        } 
         if($empleado->id== Auth::user()->id){
             return redirect('empleado')->with("mensaje",'No puedes borrar tu propio usuario.');
         }
