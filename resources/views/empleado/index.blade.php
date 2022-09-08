@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+@endsection
 @section('content')
 <div class="container">
     @if (Session::has('mensaje'))   
@@ -24,12 +27,13 @@
 
 {{-- <a href="{{ url('empleado/create') }}" class="btn btn-success mb-2">Registrar nuevo empleado</a>
  --}}
-<table class="table table-light">
+<table class="table table-light" id ="tab-empleados" >
     <thead class="thead-light">
         <tr>
             <th>#</th>
             {{-- <th>Foto</th> --}}
             <th>Nombre</th>
+            <th>Apellido</th>
             <th>Cuil</th>
             <th>Correo</th>
             <th>Acciones</th>
@@ -43,6 +47,7 @@
                 <img src="{{ asset("storage").'/'.$empleado->Foto }}" width="100" alt="Imagen usuario" class="img img-responsive">
                 </td> --}}
             <td>{{ $empleado->name }}</td>
+            <td>{{ $empleado->surname }}</td>
             <td>{{ $empleado->cuil }}</td>
             <td>{{ $empleado->email }}</td>
             <td> 
@@ -66,7 +71,32 @@
         
     </tbody>
 </table>
-{!! $empleados->links() !!}
+{{-- {!! $empleados->links() !!} --}}
 
 </div>
+
+
+@section('js')
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+       /*  $.get('public/js/')
+            .done(function( data ) {
+                var content = JSON.parse(data);
+                console.log(content)
+                alert(content[0].nombre)
+            }); */
+
+        $('#tab-empleados').DataTable({
+            lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
+            ordering: false,
+            language: {
+            url: '/js/dataTables.spanish.json'}
+        });
+    });
+</script>
+@endsection
 @endsection
