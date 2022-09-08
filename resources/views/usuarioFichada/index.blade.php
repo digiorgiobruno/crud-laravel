@@ -62,22 +62,23 @@
             <tr>
                 <th>Fecha</th>
                 <th>Hora</th>
-                <th>Tipo</th>
+                {{-- <th>Tipo</th> --}}
             </tr>
         </thead>
 
         <tbody>
 
             @foreach ($fichadas as $fichada)
-            @php
+           {{--  @php
                 if ($fichada->CHECKTYPE=='O'){ $clase='table-warning'; $tipo='Salída';}
                 elseif ($fichada->CHECKTYPE=='I'){$clase='table-info'; $tipo='Entrada';}
             @endphp
             
-            <tr class='{{ $clase }}'>
+            <tr class='{{ $clase }}'> --}}
+            <tr>
                 <td>{{ date("d/m/Y",strtotime($fichada->CHECKTIME)) }}</td> 
                 <td>{{ date("H:i:s",strtotime($fichada->CHECKTIME))}}</td>      
-                <td>{{ $tipo }}</td>      
+                {{-- <td>{{ $tipo }}</td>  --}}     
             </tr>  
             @endforeach
 
@@ -101,6 +102,9 @@
                 $('#tab-fichadas').DataTable({
                     lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
                     ordering: false,
+                    language: {
+                        url: '/js/dataTables.spanish.json'}
+     
                 });
             });
         </script>
