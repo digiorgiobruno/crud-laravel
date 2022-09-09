@@ -133,37 +133,45 @@ class EmpleadoController extends Controller
         }
       
         $this->validate($request,$campos,$mensajes);
-       // dd($request);
-        
+
+        $mensajes="Request ".$request->img." Empleado->img ".$empleado->img;
+        $name='';//$request->img=='' &&
+         if( $empleado->img!=''){
+            $name=$empleado->img;
+        }
+        if($name==''){
+            $name = md5(uniqid() . time()) . '.' . 'png';
+        }
+   
         if (isset(Slim::getImages()[0]))
         {
             $image = Slim::getImages()[0];
 
-            
-          
                 if (isset($image['output']['data'])){
-                    $name = md5(uniqid() . time()) . '.' . 'png';
                     $data = $image['output']['data'];
-                    $path = base_path() . '/storage/app/public';
-                    $file = Slim::saveFile($data, $name, $path);
+                    $path = base_path() . '/storage/app/public/img';
+                    $file = Slim::saveFile($data, $name, $path,false);
                     $datosEmpleado['img']=$file['name']; 
                 }
-            
-
         }else{
 
-            if (!$request->img){
-                Storage::delete('public/'.$empleado->img);
+            if (!$request->img && $empleado->img!= null ){
+                $path = base_path() . '/storage/app/public/img/'.$empleado->img;
+                unlink($path);
+                //Storage::delete($urlImg);
                 $datosEmpleado['img'] = null;
-            }  
+            }
         }
+
+         
+        
         User::where('id','=',$empleado->id)->update($datosEmpleado);
 
         $empleado=User::findOrFail($empleado->id);
         
         $datos['empleado']=$empleado;
-        $datos['mensaje']='Modificado.';
-        return redirect()->route('empleado.edit',  $empleado)->with("mensaje",'Empleado modificado');
+        $datos['mensaje']=$mensajes;//'Modificado.';
+        return redirect()->route('empleado.edit',  $empleado)->with("mensaje",$datos['mensaje']);
     }
 
     /**

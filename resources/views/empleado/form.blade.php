@@ -55,7 +55,7 @@
      data-ratio="1:1">
         <input type="file" name="slim"/>
         @if (isset($empleado->img))
-        <img src="{{ asset("storage").'/'.$empleado->img }}" alt="Imagen usuario" >
+        <img src="{{ asset("storage").'/img/'.$empleado->img }}" alt="Imagen usuario" >
         @endif
 </div>
 

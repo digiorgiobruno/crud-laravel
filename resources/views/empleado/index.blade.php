@@ -90,11 +90,14 @@
                 alert(content[0].nombre)
             }); */
 
+            urlL="{{ asset('storage/') }}"+"/js/dataTables.spanish.json";
+            //console.log(urlL);
+
         $('#tab-empleados').DataTable({
             lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
             ordering: false,
             language: {
-            url: '/js/dataTables.spanish.json'}
+            url: urlL}
         });
     });
 </script>
