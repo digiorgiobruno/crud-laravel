@@ -134,7 +134,7 @@ class EmpleadoController extends Controller
       
         $this->validate($request,$campos,$mensajes);
 
-        $mensajes="Request ".$request->img." Empleado->img ".$empleado->img;
+        //$mensajes="Request ".$request->img." Empleado->img ".$empleado->img;
         $name='';//$request->img=='' &&
          if( $empleado->img!=''){
             $name=$empleado->img;
@@ -170,7 +170,7 @@ class EmpleadoController extends Controller
         $empleado=User::findOrFail($empleado->id);
         
         $datos['empleado']=$empleado;
-        $datos['mensaje']=$mensajes;//'Modificado.';
+        $datos['mensaje']='Modificado.';
         return redirect()->route('empleado.edit',  $empleado)->with("mensaje",$datos['mensaje']);
     }
 
