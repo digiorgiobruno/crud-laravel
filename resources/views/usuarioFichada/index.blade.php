@@ -98,12 +98,13 @@
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
         <script>
+            urlL="{{ asset('/js/dataTables.spanish.json') }}";
             $(document).ready(function () {
                 $('#tab-fichadas').DataTable({
                     lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
                     ordering: false,
                     language: {
-                        url: '/js/dataTables.spanish.json'}
+                        url: urlL}
      
                 });
             });

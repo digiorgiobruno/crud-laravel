@@ -83,15 +83,10 @@
 
 <script>
     $(document).ready(function () {
-       /*  $.get('public/js/')
-            .done(function( data ) {
-                var content = JSON.parse(data);
-                console.log(content)
-                alert(content[0].nombre)
-            }); */
-
-            urlL="{{ asset('storage/') }}"+"/js/dataTables.spanish.json";
-            //console.log(urlL);
+   
+        urlL="{{ asset('/js/dataTables.spanish.json') }}";
+        //urlL='/js/dataTables.spanish.json';
+        //console.log(urlL);
 
         $('#tab-empleados').DataTable({
             lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
