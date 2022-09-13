@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css"> --}}
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
 @endsection
 @section('content')
 <div class="container">
@@ -27,8 +30,8 @@
 
 {{-- <a href="{{ url('empleado/create') }}" class="btn btn-success mb-2">Registrar nuevo empleado</a>
  --}}
-<table class="table table-light" id ="tab-empleados" >
-    <thead class="thead-light">
+<table class="display nowrap" style="width:100%" id ="tab-empleados" >
+    <thead>
         <tr>
             <th>#</th>
             {{-- <th>Foto</th> --}}
@@ -77,22 +80,27 @@
 
 
 @section('js')
+{{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script> --}}
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+
 
 <script>
     $(document).ready(function () {
    
         urlL="{{ asset('/js/dataTables.spanish.json') }}";
-        //urlL='/js/dataTables.spanish.json';
-        //console.log(urlL);
 
         $('#tab-empleados').DataTable({
             lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
+            responsive: true,
             ordering: false,
             language: {
-            url: urlL}
+            url: urlL} 
         });
     });
 </script>

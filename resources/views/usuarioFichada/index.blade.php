@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/r-2.3.0/datatables.min.css"/>
+
 @endsection
 
 <div class="container">
@@ -57,8 +58,10 @@
 
 </form>
 @if (count($fichadas)>0)
-    <table id ="tab-fichadas" class="table table-light shadow-lg">
-        <thead class="thead-light">
+
+   
+    <table id ="tab-fichadas"   class="table table-striped  responsive nowrap" style="width:100%">
+        <thead>
             <tr>
                 <th>Fecha</th>
                 <th>Hora</th>
@@ -85,6 +88,7 @@
             
         </tbody>
     </table>
+    
     @else
         <div class="alert alert-success" role="alert">
            {{ $mensaje }}
@@ -93,19 +97,19 @@
     @endif
 </div>
     @section('js')
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/r-2.3.0/datatables.min.js"></script>
 
         <script>
             urlL="{{ asset('/js/dataTables.spanish.json') }}";
             $(document).ready(function () {
-                $('#tab-fichadas').DataTable({
+                $('#tab-fichadas').DataTable({           
                     lengthMenu:[[10,50,100,-1],[10,50,100,"Todos"]],
                     ordering: false,
                     language: {
-                        url: urlL}
-     
+                        url: urlL},
+                    responsive: true 
                 });
             });
         </script>
