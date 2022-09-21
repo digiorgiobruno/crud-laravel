@@ -136,13 +136,12 @@ class ControlHorarioController extends Controller
                                      //dump($e);
                                 }
                                 
-                            }else{
-                                //dump("La marca en la posicion K ". $k ." y en k+1 ". $k+1  );
                             }
                         }
                         unset($marcaDia);
                         $totalHora=$total/3600;
                         $totalHora=round($totalHora,2);
+                        dump($totalHora);
                         if($totalHora >= 5){
                             $cartel="5 horas cumplidas";
                             $tipo="success";
@@ -152,6 +151,12 @@ class ControlHorarioController extends Controller
                             $tipo="danger";
                             unset($marcaDia);
                         }
+                        $minutos='';
+                        $partes=explode('.',$totalHora);
+                        if(isset($partes[0])){$horas=$partes[0]." hr";}
+                        if(isset($partes[1])){$minutos=round($partes[1]*0.6)." min";}                    
+                        $totalHora=$horas." ".$minutos;
+
                     }else{
                         $cartel="Imposible calcular total faltan marcas";
                         $totalHora="Indefinido";
@@ -159,7 +164,7 @@ class ControlHorarioController extends Controller
                         unset($marcaDia);
                         
                     }
- 
+
                     $newFichada[$i]->total=$totalHora;
                     $newFichada[$i]->cartel=$cartel;
                     $newFichada[$i]->tipo=$tipo;
