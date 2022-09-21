@@ -58,6 +58,7 @@
                     <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}" class="btn btn-warning">Editar</a> 
                     <form action="{{ url(route('usuarios.getuserinfo')) }}" method="get" class="d-inline">
                         @csrf
+                        <input type="hidden" name="opcion" value='true'>
                         <input type="hidden" name="cuil" value="{{ $empleado->cuil}}">
                         <input type="submit" value="ver" class="btn btn-primary">   
                     </form>

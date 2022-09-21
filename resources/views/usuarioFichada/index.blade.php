@@ -21,11 +21,7 @@
         <li class="list-group-item"><span>Total fichadas registradas:</span> {{ count($fichadas)  }}</li>
     </ul>
 @endif
-      
-
-       
         
-      
 <form action="{{ url('usuarios') }}" method="GET">
     @csrf
 
@@ -50,7 +46,12 @@
             
             <input type='submit' name="Filtrar" value='Filtrar' class='btn btn-primary'/>
             <input type='submit' name="Limpiar" value='Limpiar' class='btn btn-default'/>
-
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="opcion" value="1" id="flexCheckDefault" {{isset($opcion)&&$opcion==false?'checked':''}}>
+                <label class="form-check-label" for="flexCheckDefault">
+                  Vista sin detalles
+                </label>
+              </div>
         </div>
 
     </div>
@@ -64,28 +65,44 @@
         <thead>
             <tr>
                 <th>Fecha</th>
-                <th>Hora</th>
-                {{-- <th>Tipo</th> --}}
+                @if (!$opcion)
+                    <th>Hora</th>
+                @else
+                    <th>Brecha horaria</th>
+                    <th>Condición</th>
+                    <th>Total</th>
+                @endif
             </tr>
         </thead>
 
         <tbody>
-
-            @foreach ($fichadas as $fichada)
-           {{--  @php
-                if ($fichada->CHECKTYPE=='O'){ $clase='table-warning'; $tipo='Salída';}
-                elseif ($fichada->CHECKTYPE=='I'){$clase='table-info'; $tipo='Entrada';}
-            @endphp
-            
-            <tr class='{{ $clase }}'> --}}
-            <tr>
-                <td>{{ date("d/m/Y",strtotime($fichada->CHECKTIME)) }}</td> 
-                <td>{{ date("H:i:s",strtotime($fichada->CHECKTIME))}}</td>      
-                {{-- <td>{{ $tipo }}</td>  --}}     
-            </tr>  
-            @endforeach
-
-            
+           @if (!$opcion)
+                @foreach ($fichadas as $fichada)
+                <tr>
+                    <td>{{ date("d/m/Y",strtotime($fichada->CHECKTIME)) }}</td> 
+                    <td>{{ date("H:i:s",strtotime($fichada->CHECKTIME))}}</td>      
+                    {{-- <td>{{ isset($fichada->cartel)?$fichada->cartel:'' }}</td>
+                    <td>{{ isset($fichada->total)?$fichada->total:'' }}</td>  --}}       
+                </tr>  
+                @endforeach
+           @else
+                @foreach ($fichadas as $fichada)
+                <tr class="{{'table-'.$fichada->tipo}}">
+                    <td>{{ date("d/m/Y",strtotime($fichada->CHECKTIME)) }}</td> 
+                    <td> @foreach ( array_reverse($fichada->HORA) as $key => $hora)
+                        @if ((count($fichada->HORA)-1) == $key)
+                            {{ $hora }} 
+                        @else
+                            {{ $hora.' -' }} 
+                        @endif
+                        @endforeach 
+                    </td>
+                    
+                    <td>{{ isset($fichada->cartel)?$fichada->cartel:'' }}</td>
+                    <td>{{ isset($fichada->total)?$fichada->total:'' }}</td>        
+                </tr>  
+                @endforeach
+           @endif 
         </tbody>
     </table>
     
