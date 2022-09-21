@@ -142,7 +142,7 @@ class ControlHorarioController extends Controller
                         }
                         unset($marcaDia);
                         $totalHora=$total/3600;
-
+                        $totalHora=round($totalHora,2);
                         if($totalHora >= 5){
                             $cartel="5 horas cumplidas";
                             $tipo="success";
@@ -159,7 +159,7 @@ class ControlHorarioController extends Controller
                         unset($marcaDia);
                         
                     }
-
+ 
                     $newFichada[$i]->total=$totalHora;
                     $newFichada[$i]->cartel=$cartel;
                     $newFichada[$i]->tipo=$tipo;
