@@ -42,6 +42,10 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('empleado.index') }}">{{ __('Empleado') }}</a>
                             </li> 
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('empleado.show') }}">{{ __('Marcas por CUIL') }}</a>
+                            </li> 
+
                         @endcan
                            
                             <li class="nav-item">

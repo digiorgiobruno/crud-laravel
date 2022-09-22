@@ -83,6 +83,8 @@ class EmpleadoController extends Controller
     public function show(User $empleado)
     {
         //
+        return view('empleado.show');
+
     }
 
     /**

@@ -26,6 +26,7 @@ Route::group(['middleware'=>['auth','verified']],function (){
     Route::resource('empleado', EmpleadoController::class)->middleware('auth');
     Route::get('/', [EmpleadoController::class, 'index'])->name('home');
     Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+    Route::get('/show', [EmpleadoController::class, 'show'])->name('empleado.show');
     Route::get('/usuarios', [ControlHorarioController::class, 'getUserInfo'])->name('usuarios.getuserinfo');
     Route::post('/usuarios', [ControlHorarioController::class, 'getUserInfoFilter']);
 

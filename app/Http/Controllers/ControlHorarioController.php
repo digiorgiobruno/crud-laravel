@@ -28,10 +28,15 @@ class ControlHorarioController extends Controller
     public function getUserInfo(Request $request){
        
         if(isset($request->cuil)){
-            $cuil=$request->cuil;
+            $cuil=$request->cuil;    
         }else{
-            $cuil=$request->user()->cuil;
+            if(isset($request->consulta)&&$request->consulta){
+                $cuil=$request->cuil;
+            }else{
+                $cuil=$request->user()->cuil;
+            }
         }
+
         $ultimo=substr($cuil, -1);
         $primeros=substr($cuil,0, 2);
         $medio=substr($cuil, -9, 8);
@@ -77,7 +82,12 @@ class ControlHorarioController extends Controller
             
             return view('usuarioFichada.index',$datos);
         }else{
-            $datos['mensaje']='No se encontraron fichadas en ese rango de fechas.';
+            if(isset($request->consulta)&&$request->consulta){ 
+                $datos['mensaje']='No se encontró el CUIL.';
+            }else{
+                $datos['mensaje']='No se encontraron fichadas en ese rango de fechas.';
+            }
+            
             return view('usuarioFichada.index',$datos);
         }
 
@@ -231,6 +241,7 @@ class ControlHorarioController extends Controller
     {
         //
 
+        
     }
 
 
